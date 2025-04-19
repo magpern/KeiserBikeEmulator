@@ -2,8 +2,16 @@
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEAdvertising.h>
-#include <string>                    // ★ make std::string visible
+#include <string>
+#include <FastLED.h>
+#include <WiFi.h>
 
+#define LED_PIN     21  // WS2812 LED on GPIO21
+#define NUM_LEDS    1   // We have one RGB LED
+#define LED_TYPE    WS2812
+#define COLOR_ORDER GRB
+
+CRGB leds[NUM_LEDS];
 
 BLEAdvertising* pAdvertising;
 
@@ -13,11 +21,31 @@ constexpr int stepsPerCycle   = cycleDurationMs / stepIntervalMs;
 
 int currentStep = 0;
 
+void setLED(CRGB color) {
+  leds[0] = color;
+  FastLED.show();
+  FastLED.delay(1);  // Ensure the color is set
+}
+
 void setup()
 {
+  setCpuFrequencyMhz(80);
   Serial.begin(115200);
   while (!Serial && millis() < 3000) { }
 
+  WiFi.mode(WIFI_OFF);
+  btStop();
+  btStart(); 
+
+  // Initialize FastLED
+  FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS);
+  FastLED.setBrightness(20);  
+  FastLED.clear();  // Clear any existing colors
+  FastLED.show();
+  
+  // Show blue color during boot
+  setLED(CRGB(0, 0, 255));  // Pure blue
+  
   Serial.println("Booting…");
 
   BLEDevice::init("M3");
@@ -33,10 +61,16 @@ void setup()
   pAdvertising->start();
 
   Serial.println("M3 bike BLE advertising started…");
+  
+  // Show green when ready
+  setLED(CRGB(0, 255, 0));  // Pure green
 }
 
 void updateAdData()
 {
+  // Flash white briefly when sending data
+  setLED(CRGB(255, 255, 255));  // Pure white
+  
   const int  halfCycle = stepsPerCycle / 2;
   const bool rampUp    = currentStep < halfCycle;
   const float progress = (currentStep % halfCycle) / static_cast<float>(halfCycle);
@@ -82,7 +116,10 @@ void updateAdData()
   advData.setManufacturerData(std::string(reinterpret_cast<char*>(payload), sizeof(payload)));
   pAdvertising->setAdvertisementData(advData);
 
-  Serial.printf("Step %3d | RPM=%3u | Power=%3u | HR=%3u | Dist=%.2f km\n",
+  // Return to green after sending
+  setLED(CRGB(0, 255, 0));  // Pure green
+  
+  Serial.printf("Step %3d | RPM=%3u | Power=%3u | HR=%3u | Dist=%.2f km\n",
                 currentStep, rpm, power, hr, distance);
 
   currentStep = (currentStep + 1) % stepsPerCycle;
