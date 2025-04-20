@@ -1,12 +1,12 @@
-# Keiser M3 Bike BLE Emulator
+# Keiser M3i Bike BLE Emulator
 
-This project emulates a Keiser M3 indoor bike using an ESP32-S3 microcontroller. It broadcasts BLE advertisements that mimic the data format of a real Keiser M3 bike, allowing it to be detected and used by applications that support Keiser M3 bikes.
+This project emulates a Keiser M3i indoor bike using an ESP32-S3 microcontroller. It broadcasts BLE advertisements that mimic the data format of a real Keiser M3i bike, allowing it to be detected and used by applications that support Keiser M3i bikes.
 
 ## Features
 
-- Emulates Keiser M3 bike BLE advertisements
+- Emulates Keiser M3i bike BLE advertisements
 - Simulates realistic RPM, power, and heart rate values
-- Compatible with applications that support Keiser M3 bikes
+- Compatible with applications that support Keiser M3i bikes
 - Uses ESP32's built-in BLE capabilities
 
 ## Hardware Requirements
@@ -30,8 +30,8 @@ This project emulates a Keiser M3 indoor bike using an ESP32-S3 microcontroller.
 
 1. Power on the ESP32-S3
 2. The device will start broadcasting BLE advertisements
-3. Use a compatible app (like the Keiser M3 app) to connect to the device
-4. The app should detect the device as a Keiser M3 bike
+3. Use a compatible app (like the Keiser M3i app) to connect to the device
+4. The app should detect the device as a Keiser M3i bike
 
 ## Data Format
 
@@ -58,7 +58,7 @@ The simulation parameters can be adjusted in `src/main.cpp`:
 
 If the device is not detected:
 - Ensure BLE is enabled on your device
-- Check that the app supports Keiser M3 bikes
+- Check that the app supports Keiser M3i bikes
 - Verify the ESP32-S3 is powered and running
 
 ## License
@@ -67,5 +67,5 @@ This project is open source and available under the MIT License.
 
 ## Acknowledgments
 
-- Based on the Keiser M3 bike BLE protocol
+- Based on the Keiser M3i bike BLE protocol
 - Uses the ESP32 Arduino BLE library 
